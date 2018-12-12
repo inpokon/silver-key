@@ -212,25 +212,14 @@ function valid(form) {
 function topScroll() {
     var $arrow = $('.arrow-up'),
         headerTop = $('.header').height(),
-        topPosition = $('.position').offset().top,
-        $navMenu = $('.nav-menu'),
-        $navTextHead = $('.nav-menu__txt-head'),
-        $burger = $('.burger'),
-        $navText = $('.nav-menu__txt'),
-        menuH = $navMenu.innerHeight();
+        $burger = $('.burger');
     $(document).scroll(function () {
         var $scrollTop = $(document).scrollTop();
         if ($scrollTop > headerTop) {
             $arrow.addClass('arrow-up--active');
-            $navMenu.addClass('nav-menu--active');
-            $navTextHead.addClass('nav-menu__txt-head--none');
-            $navText.addClass('nav-menu__txt--active');
             $burger.addClass('burger--active');
         } else {
             $arrow.removeClass('arrow-up--active');
-            $navMenu.removeClass('nav-menu--active');
-            $navTextHead.removeClass('nav-menu__txt-head--none');
-            $navText.removeClass('nav-menu__txt--active');
             $burger.removeClass('burger--active');
             $burger.removeClass('burger--close');
             $('.bottom-menu').removeClass('bottom-menu--active');
@@ -238,11 +227,11 @@ function topScroll() {
     });
     $arrow.on('click', function (e) {
         e.preventDefault();
-        $('html').animate({ scrollTop: 0 }, 1000);
+        $('html, body').animate({ scrollTop: 0 }, 1000);
     });
     $('.nav-menu__link').on('click', function (e) {
         e.preventDefault();
-        $('html').animate({ scrollTop: 0 }, 1000);
+        $('html, body').animate({ scrollTop: 0 }, 1000);
     });
 }
 // fullscreen maps
@@ -1516,11 +1505,6 @@ function init() {
     });
     // Добавляем мультимаршрут на карту.
     myMap.geoObjects.add(multiRoute);
-
-    document.getElementById('destroyButton').onclick = function () {
-        // Для уничтожения используется метод destroy.
-        myMap.destroy();
-    };
 }
 
 /***/ })
