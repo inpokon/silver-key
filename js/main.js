@@ -14,6 +14,9 @@ __webpack_require__(75);
 __webpack_require__(76);
 __webpack_require__(83);
 __webpack_require__(84);
+
+var menu_selector = "#bottom-menu"; // Переменная должна содержать название класса или идентификатора, обертки нашего меню.
+
 $(document).ready(function () {
     // hover header
     hoverHeader();
@@ -40,8 +43,25 @@ $(document).ready(function () {
     clickTabMaps();
     // burger menu
     burger();
-
+    // custom Scroll
     myScrollCustom();
+    // smooth anchorage
+    $(document).on("scroll", onScroll);
+    $(menu_selector).on("click", "a", function (e) {
+        e.preventDefault();
+        $(document).off("scroll");
+        $(menu_selector + " a.active").removeClass("active");
+        $(this).addClass("active");
+        var hash = $(this).attr("href");
+        var target = $(hash);
+        var top = target.offset().top;
+        $("html, body").animate({
+            scrollTop: top
+        }, 1000, function () {
+            window.location.hash = hash;
+            $(document).on("scroll", onScroll);
+        });
+    });
 });
 
 // hover эффект для bg header
@@ -215,7 +235,9 @@ function valid(form) {
 function topScroll() {
     var $arrow = $('.arrow-up'),
         headerTop = $('.header').height(),
-        $burger = $('.burger');
+        $burger = $('.burger'),
+        $navMenuFixed = $('.nav-menu--fixed'),
+        navMenuHeight = $navMenuFixed.innerHeight();
     $(document).scroll(function () {
         var $scrollTop = $(document).scrollTop();
         if ($scrollTop > headerTop) {
@@ -226,6 +248,11 @@ function topScroll() {
             $burger.removeClass('burger--active');
             $burger.removeClass('burger--close');
             $('.bottom-menu').removeClass('bottom-menu--active');
+        }
+        if ($scrollTop > headerTop - navMenuHeight) {
+            $navMenuFixed.css('visibility', 'visible');
+        } else {
+            $navMenuFixed.removeAttr('style');
         }
     });
     $arrow.on('click', function (e) {
@@ -273,11 +300,26 @@ function burger() {
         $('.bottom-menu').toggleClass('bottom-menu--active');
     });
 }
+// custom Scroll
 function myScrollCustom() {
     $(window).on("load", function () {
         $(".pop__text").mCustomScrollbar({
             theme: "rounded-dark"
         });
+    });
+}
+// smooth anchorage
+function onScroll() {
+    var scroll_top = $(document).scrollTop();
+    $(menu_selector + " a").each(function () {
+        var hash = $(this).attr("href");
+        var target = $(hash);
+        if (target.position().top - 5 <= scroll_top && target.position().top + target.outerHeight() > scroll_top) {
+            $(menu_selector + " a.bottom-menu__item").removeClass("bottom-menu__item--active");
+            $(this).addClass("bottom-menu__item--active");
+        } else {
+            $(this).removeClass("bottom-menu__item--active");
+        }
     });
 }
 
